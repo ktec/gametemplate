@@ -19,13 +19,32 @@ import "deps/phoenix_html/web/static/js/phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
-window.onload = function() {
-  var game = new Phaser.Game(700, 600, Phaser.AUTO, 'phaser', { preload: preload, create: create })
-  function preload () {
-    game.load.image('logo', '/images/phaser.png')
+
+class PlayState extends Phaser.State {
+  preload() {
+    this.game.load.image('logo', '/images/phaser.png')
   }
-  function create () {
-    var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo')
+
+  create() {
+    var logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo')
     logo.anchor.setTo(0.5, 0.5)
   }
+
+	update() {
+	}
 }
+
+class Game extends Phaser.Game {
+
+	// Initialize Phaser
+	constructor(width, height, container) {
+		super(width, height, Phaser.AUTO, container, null)
+    this.state.add('play', new PlayState(), false)
+    // Start the "boot" state
+		this.state.start('play')
+  }
+
+}
+
+// Lets go!
+new Game(700, 450, 'phaser')
