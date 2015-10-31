@@ -22,15 +22,65 @@ import "deps/phoenix_html/web/static/js/phoenix_html"
 
 class PlayState extends Phaser.State {
   preload() {
-    this.game.load.image('logo', '/images/phaser.png')
+    this.game.load.image('phoenix', '/images/phoenix.png')
+    this.game.load.image('phaser', '/images/phaser.png')
+    this.game.load.image('elephant', '/images/elephant.png')
   }
 
   create() {
-    var logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo')
-    logo.anchor.setTo(0.5, 0.5)
+    this.logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'phaser')
+    this.logo.anchor.setTo(0.5, 0.5)
+    this.up_key = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN)
+    this.down_key = this.game.input.keyboard.addKey(Phaser.Keyboard.UP)
+    this.left_key = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT)
+    this.right_key = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT)
+    this.space_key = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+    this.emitter = this.game.add.emitter(this.game.world.centerX, 200, 200)
+    // emitter.width = 800
+    this.emitter.makeParticles('elephant')
+    this.emitter.minParticleSpeed.set(-400, -300)
+    this.emitter.maxParticleSpeed.set(400, 300)
+    // this.emitter.minParticleSpeed.setTo(-300, -300)
+    // this.emitter.maxParticleSpeed.setTo(300, 300)
+
+    this.emitter.setAlpha(0.3, 0.8)
+    this.emitter.setScale(0.1, 0.1, 0.2, 0.2)
+    // this.emitter.gravity = -200
+    this.emitter.minRotation = 0
+    this.emitter.maxRotation = 0
+    this.emitter.start(false, 1000, 100)
+  }
+
+  zoomOut() {
+    let x = this.logo.scale.x
+    let y = this.logo.scale.y
+    this.logo.scale.setTo(x * 0.95, y * 0.95)
+  }
+
+  zoomIn() {
+    let x = this.logo.scale.x
+    let y = this.logo.scale.y
+    this.logo.scale.setTo(x * 1.05, y * 1.05)
+  }
+
+
+
+  rotateLeft() {
+    this.logo.rotation -= 0.1
+  }
+
+  rotateRight() {
+    this.logo.rotation += 0.1
+    this.emitter.setRotation(this.logo.rotation, this.logo.rotation)
   }
 
 	update() {
+    if (this.down_key.isDown) { this.zoomIn() }
+    if (this.up_key.isDown) { this.zoomOut() }
+    if (this.left_key.isDown) { this.rotateLeft() }
+    if (this.right_key.isDown) { this.rotateRight() }
+    if (this.space_key.isDown) { this.emitter.on = true }
+    else { this.emitter.on = false }
 	}
 }
 
