@@ -17,7 +17,16 @@ export class Game extends Phaser.Game {
     this.state.add('play', new PlayState(), false)
     this.state.add('preload', new PreloadState(), false)
 
+    this.score = 0
+    this.highscore = 0
+
     // Start the "boot" state
     this.state.start('boot')
+  }
+
+  newScore() {
+    if (this.score > this.highscore) {
+      this.highscore = this.score
+    }
   }
 }
