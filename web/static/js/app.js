@@ -11,15 +11,15 @@
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
-import "deps/phoenix_html/web/static/js/phoenix_html"
+import 'deps/phoenix_html/web/static/js/phoenix_html'
 
 // Import local files
 //
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-// import socket from "./socket"
+import socket from "./socket"
 // Import the game
-import {Game} from "./game"
+import {Game} from './game'
 // Lets go!
-new Game(700, 450, 'phaser')
+new Game(700, 450, 'phaser', socket)
