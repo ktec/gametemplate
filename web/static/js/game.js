@@ -12,9 +12,8 @@ export class Game extends Phaser.Game {
     socket.connect()
     let channel = socket.channel("games:lobby", {})
 
-    channel.on("shout", ({message, data}) => {
-      console.log(`Shout received ${message}`, data)
-    })
+    let game = this
+    channel.on("shout", response => game.onShout.call(game, response))
 
     channel.join()
       .receive("ok", _ => {
@@ -35,4 +34,10 @@ export class Game extends Phaser.Game {
   shout(message, data = null) {
     this.channel.push("shout", {message: message, data: data})
   }
+
+  onShout(response) {
+    let currentState = this.state.states[this.state.current]
+    currentState.onShout(response)
+  }
+
 }
