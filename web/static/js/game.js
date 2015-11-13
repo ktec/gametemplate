@@ -15,5 +15,4 @@ export class Game extends Phaser.Game {
     // lets start
     this.state.start('menu')
   }
-
 }

@@ -4,7 +4,6 @@ export class MenuState extends Phaser.State {
     label.anchor.setTo(0.5)
     label.inputEnabled = true
     label.events.onInputDown.add(this.labelClicked, this)
-
   }
 
   addText(message, style = { font: '65px Arial', fill: '#ffffff' }) {
@@ -12,7 +11,7 @@ export class MenuState extends Phaser.State {
   }
 
   labelClicked() {
-    console.log('You clicked!');
+    console.log('You clicked!')
   }
 
 	update() {}
