@@ -3,6 +3,7 @@ defmodule Gametemplate.UserSocket do
 
   ## Channels
   # channel "rooms:*", Gametemplate.RoomChannel
+  channel "games:lobby", Gametemplate.GameChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

@@ -11,7 +11,8 @@ export class MenuState extends Phaser.State {
   }
 
   labelClicked() {
-    console.log('You clicked!')
+    // console.log('You clicked!')
+    this.game.shout('You clicked', [1,2,3])
   }
 
 	update() {}
