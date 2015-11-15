@@ -24,7 +24,7 @@ export class MenuState extends Phaser.State {
 
   }
 
-  addText(message, style = { font: "65px Arial", fill: '#ffffff' }) {
+  addText(message, style = { font: "65px Arial Black", fill: '#ffffff' }) {
     return this.add.text(this.world.centerX, this.world.centerY, message, style)
   }
 
@@ -33,7 +33,7 @@ export class MenuState extends Phaser.State {
   }
 
   dragStop(sprite, pointer) {
-    let data = { x: pointer.x, y: pointer.y }
+    let data = { x: sprite.x, y: sprite.y }
     this.game.shout('Drag stopped', data)
   }
 

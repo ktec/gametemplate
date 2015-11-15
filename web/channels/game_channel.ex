@@ -18,7 +18,9 @@ defmodule Gametemplate.GameChannel do
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (games:lobby).
   def handle_in("shout", payload, socket) do
-    broadcast socket, "shout", payload
+    # TODO: talk about the difference between these
+    # broadcast socket, "shout", payload
+    broadcast_from! socket, "shout", payload
     {:noreply, socket}
   end
 
