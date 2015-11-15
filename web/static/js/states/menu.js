@@ -28,18 +28,17 @@ export class MenuState extends Phaser.State {
     return this.add.text(this.world.centerX, this.world.centerY, message, style)
   }
 
-  dragStart() {
-    this.game.shout('Drag started')
+  dragStart(sprite, pointer) {
+    this.draggedSprite = sprite
   }
 
   dragStop(sprite, pointer) {
-    let data = { x: sprite.x, y: sprite.y }
-    this.game.shout('Drag stopped', data)
+    delete this.draggedSprite
   }
 
   onShout({message, data}) {
-    console.log(`Shout received ${message}`, data)
     if (data == null) { return }
+    // console.log(`Shout received ${message}`, data)
     let { x, y } = data
     if (x) { this.label.x = x }
     if (y) { this.label.y = y }
@@ -47,5 +46,14 @@ export class MenuState extends Phaser.State {
 
 	update() {
     this.filter.update()
+    if (this.draggedSprite) {
+      // console.log(this.draggedSprite)
+      this.game.shout('Drag started',
+        {
+          x: this.draggedSprite.x,
+          y: this.draggedSprite.y
+        }
+      )
+    }
   }
 }
