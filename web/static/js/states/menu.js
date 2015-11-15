@@ -30,11 +30,26 @@ export class MenuState extends Phaser.State {
 
   dragStart(sprite, pointer) {
     this.draggedSprite = sprite
+    this.timer = this.time.events.loop(10, this.onTick, this)
   }
 
   dragStop(sprite, pointer) {
     delete this.draggedSprite
+    this.time.events.remove(this.timer)
   }
+
+  onTick() {
+    if (this.draggedSprite) {
+      console.log(this.draggedSprite)
+      this.game.shout('Drag started',
+        {
+          x: this.draggedSprite.x,
+          y: this.draggedSprite.y
+        }
+      )
+    }
+  }
+
 
   onShout({message, data}) {
     if (data == null) { return }
@@ -46,14 +61,5 @@ export class MenuState extends Phaser.State {
 
 	update() {
     this.filter.update()
-    if (this.draggedSprite) {
-      // console.log(this.draggedSprite)
-      this.game.shout('Drag started',
-        {
-          x: this.draggedSprite.x,
-          y: this.draggedSprite.y
-        }
-      )
-    }
   }
 }
