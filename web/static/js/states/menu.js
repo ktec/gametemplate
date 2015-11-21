@@ -12,20 +12,34 @@ export class MenuState extends Phaser.State {
   onPress(event) {
     // console.log(event)
     // console.log(event.which)
-    let char = this.keyboard.charFromCode(event.which, event.shiftKey)
-    this.addLetter(char)
+    let [char, pos] = this.keyboard.charFromCode(event.which, event.shiftKey)
+    console.log(char, pos)
+    this.addLetter(char, pos)
   }
 
-  addLetter(char) {
+  addLetter(char, pos) {
     //this._keys[keycode] = new Phaser.Key(this.game, keycode);
     //console.log(Phaser.Keyboard[keyCode])
     let sprite = this.addText(char)
-    let tween = this.add.tween(sprite)
-    tween.to({ alpha: 0, x: Math.random() * 500, y: 2 * char.charCodeAt(0) }, 800, Phaser.Easing.Linear.None)
-    tween.onComplete.add(function () {
-      sprite.destroy()
-    })
-    tween.start()
+    // sprite.x = pos.x
+    // sprite.y = pos.y
+    let tweenPos = this.add.tween(sprite)
+    let tweenScale = this.add.tween(sprite.scale)
+
+    let moveTo = tweenPos.to(pos, 200, Phaser.Easing.Linear.None)
+    let scaleBig = tweenScale.to({x:5, y:5}, 200, Phaser.Easing.Bounce.InOut)
+    let scaleToOne = tweenScale.to({x: 1, y: 1}, 100, Phaser.Easing.Bounce.Out)
+    let fadeOut = tweenPos.to({ alpha:0, angle: 0 }, 3200, Phaser.Easing.Linear.None)
+
+    moveTo
+      .chain(scaleBig)
+      .chain(scaleToOne)
+      .chain(fadeOut)
+
+    tweenPos.onComplete.add(function () { sprite.destroy() })
+    //.start()
+    moveTo.start()
+    tweenScale.start()
   }
 
   addText(message, style = { font: '65px Arial Black', fill: '#ffffff' }) {
@@ -33,6 +47,7 @@ export class MenuState extends Phaser.State {
     label.anchor.setTo(0.5)
     label.inputEnabled = true
     label.input.enableDrag()
+    label.events.onDragStop.add(this.dragStop, this)
     return label
   }
 
@@ -40,10 +55,11 @@ export class MenuState extends Phaser.State {
   //   this.game.shout('Drag started')
   // }
   //
-  // dragStop(sprite, pointer) {
-  //   let data = { x: pointer.x, y: pointer.y }
-  //   this.game.shout('Drag stopped', data)
-  // }
+  dragStop(sprite, pointer) {
+    let data = { x: sprite.x, y: sprite.y }
+    console.log(`${sprite.text.charCodeAt(0)}: ['${sprite.text.toLowerCase()}', '${sprite.text}', {x: ${data.x}, y: ${data.y}}],`)
+    this.game.shout('Drag stopped', data)
+  }
   //
   // onShout({message, data}) {
   //   console.log(`Shout received ${message}`, data)
@@ -59,19 +75,26 @@ export class MenuState extends Phaser.State {
 class Keyboard {
   constructor() {
     this.data = {
-      81: ['q', 'Q'],
-      219: ['{','['],
-      221: ['}',']']
+      81: ['q', 'Q', {x: 79, y: 311}],
+      87: ['w', 'W', {x: 140, y: 311}],
+      69: ['e', 'E', {x: 197, y: 311}],
+      82: ['r', 'R', {x: 244, y: 311}],
+      84: ['t', 'T', {x: 291, y: 311}],
+      89: ['y', 'Y', {x: 342, y: 310}],
+      // 219: ['{','['],
+      // 221: ['}',']']
     }
   }
   charFromCode(code, shiftKey) {
     let char = ''
     if (code in this.data) {
-      char = (shiftKey) ? this.data[code][1] : this.data[code][0]
+      let [up, down, pos] = this.data[code]
+      char = (shiftKey) ? up : down
+      return [char, pos]
     } else {
       char = String.fromCharCode(code)
       console.log(code)
+      return [char, {}]
     }
-    return char
   }
 }
