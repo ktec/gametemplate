@@ -29,14 +29,14 @@ export class MenuState extends Phaser.State {
     let moveTo = tweenPos.to(pos, 200, Phaser.Easing.Linear.None)
     let scaleBig = tweenScale.to({x:5, y:5}, 200, Phaser.Easing.Bounce.InOut)
     let scaleToOne = tweenScale.to({x: 1, y: 1}, 100, Phaser.Easing.Bounce.Out)
-    let fadeOut = tweenPos.to({ alpha:0, angle: 0 }, 3200, Phaser.Easing.Linear.None)
+    // let fadeOut = tweenPos.to({ alpha:0, angle: 0 }, 3200, Phaser.Easing.Linear.None)
 
     moveTo
       .chain(scaleBig)
       .chain(scaleToOne)
-      .chain(fadeOut)
+      // .chain(fadeOut)
 
-    tweenPos.onComplete.add(function () { sprite.destroy() })
+    // tweenPos.onComplete.add(function () { sprite.destroy() })
     //.start()
     moveTo.start()
     tweenScale.start()
@@ -58,7 +58,7 @@ export class MenuState extends Phaser.State {
   dragStop(sprite, pointer) {
     let data = { x: sprite.x, y: sprite.y }
     console.log(`${sprite.text.charCodeAt(0)}: ['${sprite.text.toLowerCase()}', '${sprite.text}', {x: ${data.x}, y: ${data.y}}],`)
-    this.game.shout('Drag stopped', data)
+    //this.game.shout('Drag stopped', data)
   }
   //
   // onShout({message, data}) {
@@ -76,6 +76,7 @@ class Keyboard {
   constructor() {
     this.data = {
       81: ['q', 'Q', {x: 79, y: 311}],
+      85: ['u', 'U', {x: 394, y: 310}],
       87: ['w', 'W', {x: 140, y: 311}],
       69: ['e', 'E', {x: 197, y: 311}],
       82: ['r', 'R', {x: 244, y: 311}],
