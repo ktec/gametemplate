@@ -14,10 +14,13 @@ export class MenuState extends Phaser.State {
     // console.log(event.which)
     let [char, pos] = this.keyboard.charFromCode(event.which, event.shiftKey)
     console.log(char, pos)
-    this.addLetter(char, pos)
+    //this.addLetter(char, pos)
+
+    this.game.shout('addLetter', {c: char, x: pos.x, y: pos.y})
   }
 
   addLetter(char, pos) {
+    console.log("hello", char, pos)
     //this._keys[keycode] = new Phaser.Key(this.game, keycode);
     //console.log(Phaser.Keyboard[keyCode])
     let sprite = this.addText(char)
@@ -42,6 +45,7 @@ export class MenuState extends Phaser.State {
   }
 
   addText(message, style = { font: '65px Arial Black', fill: '#ffffff' }) {
+    style.fill = this.generateRandomHexColour()
     let label = this.add.text(this.world.centerX, this.world.centerY, message, style)
     label.anchor.setTo(0.5)
     label.inputEnabled = true
@@ -59,15 +63,22 @@ export class MenuState extends Phaser.State {
     console.log(`${sprite.text.charCodeAt(0)}: ['${sprite.text.toLowerCase()}', '${sprite.text}', {x: ${data.x}, y: ${data.y}}],`)
     //this.game.shout('Drag stopped', data)
   }
-  //
-  // onShout({message, data}) {
-  //   console.log(`Shout received ${message}`, data)
-  //   if (data == null) { return }
-  //   let { x, y } = data
-  //   if (x) { this.label.x = x }
-  //   if (y) { this.label.y = y }
-  // }
-  //
+
+  generateRandomHexColour() {
+    return '#'+('00000'+(Math.random()*16777216<<0).toString(16)).substr(-6)
+  }
+
+  onShout({message, data}) {
+    console.log(`Shout received ${message}`, data)
+    if (data == null) { return }
+    // let { x, y } = data
+    // if (x) { this.label.x = x }
+    // if (y) { this.label.y = y }
+    let {c, x, y} = data
+    console.log(c,x,y)
+    this.addLetter(c, {x: x, y: y})
+  }
+
 	update() {}
 }
 
