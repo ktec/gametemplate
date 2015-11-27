@@ -2,6 +2,8 @@ export class MenuState extends Phaser.State {
   preload() {
     // this.load.script('filter', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Fire.js');
     this.game.load.image('rock', 'images/rock.png')
+    // this.game.load.image('paper', 'images/paper.png')
+    // this.game.load.image('scissors', 'images/scissors.png')
   }
 
   create() {
@@ -67,7 +69,7 @@ export class MenuState extends Phaser.State {
   onTick() {
     if (this.draggedSprite) {
       console.log(this.draggedSprite)
-      this.game.shout('Drag started',
+      this.game.shout('label',
         {
           x: this.draggedSprite.x,
           y: this.draggedSprite.y
@@ -81,8 +83,18 @@ export class MenuState extends Phaser.State {
     if (data == null) { return }
     // console.log(`Shout received ${message}`, data)
     let { x, y } = data
-    if (x) { this.label.x = x }
-    if (y) { this.label.y = y }
+    switch (message) {
+      case "rock":
+        if (x) { this.rock.x = x }
+        if (y) { this.rock.y = y }
+        break;
+      case "label":
+        if (x) { this.label.x = x }
+        if (y) { this.label.y = y }
+        break;
+      default:
+        console.log(x,y)
+    }
   }
 
   preRender() {
@@ -95,7 +107,7 @@ export class MenuState extends Phaser.State {
   }
 
 	update() {
-    this.filter.update()
+    // this.filter.update()
     //  Collide the rock and the stars with the platforms
     this.game.physics.arcade.collide(this.rock, this.label)
 
@@ -118,5 +130,12 @@ export class MenuState extends Phaser.State {
     {
         this.rock.body.velocity.y = -350;
     }
+
+    if (this.rock.body.velocity.y != 0 ||
+      this.rock.body.velocity.x != 0) {
+      let [x, y] = [this.rock.x, this.rock.y]
+      this.game.shout('rock', { x: x, y: y })
+    }
+
   }
 }
