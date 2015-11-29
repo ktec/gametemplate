@@ -24,22 +24,19 @@ export class MenuState extends Phaser.State {
 
   	background.filters = [filter]
 
-    let space = 20
+    // let space = 20
+    //
+    // let nextX = rock.x + rock.width + space
+    //
+    // let paper = this.game.add.sprite(nextX, this.game.world.height - 150, 'paper')
+    // paper.scale.setTo(0.3)
+    //
+    // nextX = paper.x + paper.width + space
+    //
+    // let scissors = this.game.add.sprite(nextX, this.game.world.height - 150, 'scissors')
+    // scissors.scale.setTo(0.3)
 
-    let rock = this.game.add.sprite(32, this.game.world.height - 150, 'rock')
-    rock.scale.setTo(0.3)
-
-    let nextX = rock.x + rock.width + space
-
-    let paper = this.game.add.sprite(nextX, this.game.world.height - 150, 'paper')
-    paper.scale.setTo(0.3)
-
-    nextX = paper.x + paper.width + space
-
-    let scissors = this.game.add.sprite(nextX, this.game.world.height - 150, 'scissors')
-    scissors.scale.setTo(0.3)
-
-    menu = game.add.group();
+    let menu = this.createMenu()
 
     this.label = label
     this.background = background
@@ -55,4 +52,25 @@ export class MenuState extends Phaser.State {
 	update() {
     this.filter.update()
   }
+
+  // menuItem(key) {
+  //   let item = this.game.add.sprite()
+  // }
+
+  createMenu() {
+    // here we create a group
+    let menu = this.game.add.group()
+
+    menu.create(0, 0, 'rock').scale.setTo(0.3)
+    menu.create(128, 0, 'paper').scale.setTo(0.3)
+    menu.create(256, 0, 'scissors').scale.setTo(0.3)
+
+    // menu.pivot.setTo(0.5)
+    menu.x = (this.game.world.height - menu.height) / 2
+    menu.y = (this.game.world.width - menu.width) / 2 + 150
+
+    return menu
+  }
+
+
 }
