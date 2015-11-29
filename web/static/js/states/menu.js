@@ -1,9 +1,9 @@
 export class MenuState extends Phaser.State {
   preload() {
     // this.load.script('filter', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Fire.js');
-    this.game.load.image('rock', 'images/rock.png')
-    this.game.load.image('paper', 'images/paper.png')
-    this.game.load.image('scissors', 'images/scissors.png')
+    this.game.load.image("rock", "images/rock.png")
+    this.game.load.image("paper", "images/paper.png")
+    this.game.load.image("scissors", "images/scissors.png")
   }
 
   create() {
@@ -19,31 +19,22 @@ export class MenuState extends Phaser.State {
   	background.width = 800
   	background.height = 600
 
-  	let filter = this.game.add.filter('Fire', 800, 600)
+  	let filter = this.game.add.filter("Fire", 800, 600)
   	filter.alpha = 0.0
 
   	background.filters = [filter]
 
-    // let space = 20
-    //
-    // let nextX = rock.x + rock.width + space
-    //
-    // let paper = this.game.add.sprite(nextX, this.game.world.height - 150, 'paper')
-    // paper.scale.setTo(0.3)
-    //
-    // nextX = paper.x + paper.width + space
-    //
-    // let scissors = this.game.add.sprite(nextX, this.game.world.height - 150, 'scissors')
-    // scissors.scale.setTo(0.3)
+    let menu = new Menu(this.game)
+    menu.x = this.game.world.width / 2
+    menu.y = this.game.world.height / 2
 
-    let menu = this.createMenu()
-
+    this.menu = menu
     this.label = label
     this.background = background
     this.filter = filter
   }
 
-  addText(message, style = { font: "45px Arial Black", fill: '#ffffff' }) {
+  addText(message, style = { font: "45px Arial Black", fill: "#ffffff" }) {
     return this.add.text(this.world.centerX, this.world.centerY, message, style)
   }
 
@@ -51,26 +42,53 @@ export class MenuState extends Phaser.State {
 
 	update() {
     this.filter.update()
+    this.menu.rotation += 0.02
   }
 
-  // menuItem(key) {
-  //   let item = this.game.add.sprite()
-  // }
+  onShout() {}
+}
 
-  createMenu() {
+class Menu {
+  constructor(game) {
     // here we create a group
-    let menu = this.game.add.group()
+    let group = game.add.group()
 
-    menu.create(0, 0, 'rock').scale.setTo(0.3)
-    menu.create(128, 0, 'paper').scale.setTo(0.3)
-    menu.create(256, 0, 'scissors').scale.setTo(0.3)
+    // create the menu items
+    group.add(this.createItem(game, 0, 0, "rock"))
+    group.add(this.createItem(game, 128, 0, "paper"))
+    group.add(this.createItem(game, 256, 0, "scissors"))
 
-    // menu.pivot.setTo(0.5)
-    menu.x = (this.game.world.height - menu.height) / 2
-    menu.y = (this.game.world.width - menu.width) / 2 + 150
+    console.log(group.width / 2)
+    console.log(group.height / 2)
 
-    return menu
+    group.pivot.setTo(group.width/2, group.height/2)
+    return group
   }
 
+  createItem(game, x, y, key) {
+    let button = game.make.button(x, y, key, this.onInputClick, this, 2, 1, 0)
+    button.scale.setTo(0.3)
+    button.onInputOver.add(this.onInputOver, this)
+    button.onInputOut.add(this.onInputOut, this)
+    button.onInputUp.add(this.onInputUp, this)
+    return button
+  }
 
+  onInputOver(button) {
+    button.scale.setTo(0.4)
+  }
+
+  onInputOut(button) {
+    button.scale.setTo(0.3)
+  }
+
+  onInputUp(button) {
+    button.scale.setTo(0.3)
+  }
+
+  onInputClick(button, pointer) {
+    button.scale.setTo(0.2)
+    console.log("click", button.key)
+    
+  }
 }
