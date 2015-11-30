@@ -1,5 +1,6 @@
-import {MenuState} from "./states/menu"
 import {Socket} from "deps/phoenix/web/static/js/phoenix"
+import {MenuState} from "./states/menu"
+import {PlayState} from "./states/play"
 
 export class Game extends Phaser.Game {
 
@@ -26,6 +27,7 @@ export class Game extends Phaser.Game {
 
     // Game States
     this.state.add('menu', new MenuState(), false)
+    this.state.add('play', new PlayState(), false)
 
     // lets start
     this.state.start('menu')

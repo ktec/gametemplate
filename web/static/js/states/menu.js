@@ -24,9 +24,12 @@ export class MenuState extends Phaser.State {
 
   	background.filters = [filter]
 
-    let menu = new Menu(this.game)
+    let state = this
+    let menu = new Menu(this.game, function menuItemClick(button, pointer) {
+      state.playGame(button.key)
+    })
     menu.x = this.game.world.width / 2
-    menu.y = this.game.world.height / 2
+    menu.y = this.game.world.height / 2 + 100
 
     this.menu = menu
     this.label = label
@@ -39,34 +42,38 @@ export class MenuState extends Phaser.State {
   }
 
   // v2. ninja, cowboy, bear
-
 	update() {
     this.filter.update()
-    this.menu.rotation += 0.02
+    // this.menu.rotation += 0.02
   }
 
   onShout() {}
+
+  playGame(character) {
+    this.game.player = character
+    this.game.state.start("play")
+  }
 }
 
 class Menu {
-  constructor(game) {
+  constructor(game, clickHandler) {
     // here we create a group
     let group = game.add.group()
 
     // create the menu items
-    group.add(this.createItem(game, 0, 0, "rock"))
-    group.add(this.createItem(game, 128, 0, "paper"))
-    group.add(this.createItem(game, 256, 0, "scissors"))
-
-    console.log(group.width / 2)
-    console.log(group.height / 2)
+    group.add(this.createItem(game, 64, 0, "rock"))
+    group.add(this.createItem(game, 256, 0, "paper"))
+    group.add(this.createItem(game, 384, 0, "scissors"))
 
     group.pivot.setTo(group.width/2, group.height/2)
+
+    this.clickHandler = clickHandler
     return group
   }
 
   createItem(game, x, y, key) {
     let button = game.make.button(x, y, key, this.onInputClick, this, 2, 1, 0)
+    button.anchor.setTo(0.5)
     button.scale.setTo(0.3)
     button.onInputOver.add(this.onInputOver, this)
     button.onInputOut.add(this.onInputOut, this)
@@ -88,7 +95,8 @@ class Menu {
 
   onInputClick(button, pointer) {
     button.scale.setTo(0.2)
-    console.log("click", button.key)
-    
+    // console.log("click", button.key)
+    this.clickHandler(button, pointer)
   }
+
 }
