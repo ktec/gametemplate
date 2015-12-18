@@ -7,47 +7,47 @@ export class MenuState extends Phaser.State {
   }
 
   create() {
-    const label = this.addText("Rock Paper Scissors")
+    const label = this.createText("Rock Paper Scissors")
     label.anchor.setTo(0.5)
-    label.y = 150
+    label.y = 100
 
-    const label2 = this.addText("Select your player")
+    const label2 = this.createText("Select your player")
     label2.y = label.y + 50
     label2.anchor.setTo(0.5)
 
-    let background = this.game.add.sprite(0, 0)
-  	background.width = 800
-  	background.height = 600
-
-  	let filter = this.game.add.filter("Fire", 800, 600)
-  	filter.alpha = 0.0
-
-  	background.filters = [filter]
-
     let state = this
-    let menu = new Menu(this.game, function menuItemClick(button, pointer) {
-      state.playGame(button.key)
-    })
+    let menu = new Menu(this.game,
+      (button, pointer) => {
+        state.playGame(button.key)
+      })
     menu.x = this.game.world.width / 2
-    menu.y = this.game.world.height / 2 + 100
+    menu.y = this.game.world.height / 2 + 160
 
-    this.menu = menu
-    this.label = label
-    this.background = background
-    this.filter = filter
+    // this.filter = this.createBackgroundFilter(this.game)
   }
 
-  addText(message, style = { font: "45px Arial Black", fill: "#ffffff" }) {
-    return this.add.text(this.world.centerX, this.world.centerY, message, style)
+  createText(message, style = { font: "45px Arial Black", fill: "#ffffff" }) {
+    let world = this.game.world
+    let text = this.add.text(world.centerX, world.centerY, message, style)
+    return text
   }
 
   // v2. ninja, cowboy, bear
 	update() {
-    this.filter.update()
-    // this.menu.rotation += 0.02
+    // this.filter.update()
   }
 
   onShout() {}
+
+  createBackgroundFilter(game){
+    // let background = game.add.sprite(0, 0)
+  	// background.width = 800
+  	// background.height = 600
+  	// let filter = game.add.filter("Fire", 800, 600)
+  	// filter.alpha = 0.0
+  	// background.filters = [filter]
+    // return filter
+  }
 
   playGame(character) {
     this.game.player = character
